@@ -1,0 +1,24 @@
+Game Design:
+------------
+Name:
+- Purgatory
+
+Entities:
+- Out of bounds areas (anti-goal)
+- Platforms
+    - Static
+    - Elevator
+    - Falling (effected)
+        - Attached
+        - Crushing
+    - Immune (stretch)
+- Player
+- Player Ghost
+- Background (and unseen flipped "foreground")
+    - Keep camera in front of flipped "foreground"
+- Collectibles? (stretch)
+- Goal (middle line?)
+
+Player: Andrew Heckman
+Platform: Blake Needleman
+Flip Mechanic: Wes Rupert
