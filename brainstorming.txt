@@ -1,0 +1,56 @@
+Brainstorming:
+--------------
+basic ideas:
+    Basic 2D platformer
+    Puzzle-based
+    Physics / space manipulation
+    Level-based
+    midi-control?
+    platforms (in a platofrmer O.o)
+obstructions
+    AI enemies?
+    need a way to die
+    puzzle objects
+    buttons/pressure plates?
+    flippable world?
+scoring
+    basic progression
+    collectibles?
+        destroy obstructions (hints)
+        health
+style
+    2D
+    8-bit?
+    colorful?
+    dark?
+    high-contrast?
+sound
+    chiptune?
+    ambient?
+    dichotomy with flip?
+        represent through background
+        flip either in half/half or inside box
+story
+    bringing balance?
+    world split
+additions
+    enemies
+    health / falling damage
+
+Refining:
+---------
+- Level pseudo-mirrored on top - discrepencies!
+- Can flip world to interact with top of world
+- Ghosting character for reference on top
+- Can fall and die
+    - Checkpoints for saving progress
+    - Maybe add lives?
+- Humanoid protagonist
+    - Move Jump Flip
+- Simple design (retro)
+    - Simple foreground, more detailed background
+- Platforms
+    - Static
+    - Elevators?
+    - Flip-invulnerable platforms?
+    - Flip-effected platforms (falling)?
