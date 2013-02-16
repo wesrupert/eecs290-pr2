@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class CameraTracking : MonoBehaviour {
+    private const float HALFTURN = 180f;
 
     /// <summary>
     /// The object that the camera is tracking.
@@ -15,46 +16,26 @@ public class CameraTracking : MonoBehaviour {
     /// The distance the camera stays from the scene.
     /// </summary>
     public float distance = 10f;
-    private float lastDistance = 0f;
 
     /// <summary>
     /// The angle that the camera changes on each fixed update while moving.
     /// </summary>
-    public float deltaAngle = 0.01f;
-    private float lastDelta = 0f;
-
-    /// <summary>
-    /// The distance for the camera to travel in order to resemble an arc.
-    /// </summary>
-    public float deltaDistance {
-        get {
-            // Do we need to change the precalculated delta distance?
-            if (lastDistance != distance || lastDelta != deltaAngle) {
-                lastDelta = distance;
-                lastDelta = deltaAngle;
-                _deltaDistance = distance * Mathf.Sin(deltaAngle);
-            }
-
-            // Return the precalcualted delta distance.
-            return _deltaDistance;
-        }
-    }
-    private float _deltaDistance;
+    public float deltaAngle = 120f;
 
     /// <summary>
     /// Whether or not the camera is moving to the other side.
     /// </summary>
-    private bool moving = false;
+    private bool flipping = false;
 
     /// <summary>
     /// The total angle moved during movement.
     /// </summary>
-    private float angleMoved = 0f;
+    public float timeFlipped = 0f;
 
     /// <summary>
     /// The side that the camera is on (+ or -).
     /// </summary>
-    private int side = -1;
+    public int side = 1;
 
     /// <summary>
     /// Use this for initialization.
@@ -71,6 +52,73 @@ public class CameraTracking : MonoBehaviour {
     /// Update is called once per frame.
     /// </summary>
     void Update () {
+        if (Input.GetKeyDown(KeyCode.F) && !flipping) {
+            startFlipping();
+        }
+
+        if (flipping) {
+            flip();
+        }
+
+        track();
+
+        if (Input.GetKey(KeyCode.F)) {
+            startFlipping();
+        }
+    }
+
+    /// <summary>
+    /// FixedUpdate is called at a fixed interval.
+    /// </summary>
+    void FixedUpdate() {
+        // Nothing happening in here!
+    }
+
+    /// <summary>
+    /// Updates the variables used to track movement.
+    /// </summary>
+    void startFlipping() {
+        flipping = true;
+        timeFlipped = Time.time;
+    }
+
+    /// <summary>
+    /// Updates the variables used to track movement and st=naps the camera to its destination.
+    /// </summary>
+    void stopFlipping() {
+        flipping = false;
+        //side = -side;
+        //transform.position = new Vector3(transform.position.x, 0f, distance * side);
+        //transform.LookAt(new Vector3(transform.position.x, 0f, 0f));
+    }
+
+    /// <summary>
+    /// Flips the camera around the scene.
+    /// </summary>
+    void flip() {
+        if (timeFlipped + 2f > Time.time) {
+            float lastrotation = transform.rotation.x;
+            transform.RotateAround(
+                new Vector3(transform.position.x, 0f, 0f),
+                Vector3.right,
+                deltaAngle * Time.deltaTime);
+        }
+        else {
+            stopFlipping();
+        }
+    }
+
+    /// <summary>
+    /// The distance for the camera to travel in order to resemble an arc.
+    /// </summary>
+    public float deltaDistance(float deltaTime) {
+        return distance * Mathf.Sin(Mathf.Deg2Rad * deltaAngle * deltaTime);
+    }
+
+    /// <summary>
+    /// Tracks the tracked object.
+    /// </summary>
+    void track() {
         if (trackingDelay) {
             // Move faster the farther away the camera is from the tracked object.
             transform.Translate(
@@ -89,41 +137,6 @@ public class CameraTracking : MonoBehaviour {
                 Vector3.left
                 * (transform.position.x - trackedObject.transform.position.x));
         }
-    }
-
-    /// <summary>
-    /// FixedUpdate is called at a fixed interval.
-    /// </summary>
-    void FixedUpdate() {
-        // We don't need to fixed update when we're not flipping.
-        if (!moving) {
-            return;
-        }
-
-        // If camera is not at desired position (rotation isn't pi).
-        //   rotate deltaAngle down
-        //   move deltaDistance up
-        // Else
-        //   center camera (0 0 (pi | 0))
-        //   force to flat (0 0 distance * side)
-        //   stop moving
-    }
-
-    /// <summary>
-    /// Updates the variables used to track movement.
-    /// </summary>
-    void startMoving() {
-        moving = true;
-        angleMoved = 0f;
-        side = -side;
-    }
-
-    /// <summary>
-    /// Updates the variables used to track movement and st=naps the camera to its destination.
-    /// </summary>
-    void stopMoving() {
-        moving = false;
-        transform.position = Vector3.forward * distance * side;
     }
 
     /// <summary>
