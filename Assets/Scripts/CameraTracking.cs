@@ -4,6 +4,8 @@ using System.Collections;
 public class CameraTracking : MonoBehaviour {
     private const float HALFTURN = 180f;
 
+    public Quaternion r;
+
     /// <summary>
     /// The object that the camera is tracking.
     /// </summary>
@@ -30,19 +32,14 @@ public class CameraTracking : MonoBehaviour {
     /// <summary>
     /// The total angle moved during movement.
     /// </summary>
-    public float timeFlipped = 0f;
-
-    /// <summary>
-    /// The side that the camera is on (+ or -).
-    /// </summary>
-    public int side = 1;
+    public float angleFlipped = 0f;
 
     /// <summary>
     /// Use this for initialization.
     /// </summary>
     void Start () {
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-        transform.position = new Vector3(0f, 0f, side * distance);
+        transform.position = new Vector3(0f, 0f, -distance);
 
         // TODO: If we don't have a tracked object, find the player and track
         // him.
@@ -56,15 +53,14 @@ public class CameraTracking : MonoBehaviour {
             startFlipping();
         }
 
-        if (flipping) {
-            flip();
-        }
-
+        flip();
         track();
 
         if (Input.GetKey(KeyCode.F)) {
             startFlipping();
         }
+
+        r = transform.rotation;
     }
 
     /// <summary>
@@ -79,7 +75,7 @@ public class CameraTracking : MonoBehaviour {
     /// </summary>
     void startFlipping() {
         flipping = true;
-        timeFlipped = Time.time;
+        angleFlipped = 0f;
     }
 
     /// <summary>
@@ -87,32 +83,51 @@ public class CameraTracking : MonoBehaviour {
     /// </summary>
     void stopFlipping() {
         flipping = false;
-        //side = -side;
-        //transform.position = new Vector3(transform.position.x, 0f, distance * side);
-        //transform.LookAt(new Vector3(transform.position.x, 0f, 0f));
     }
 
     /// <summary>
     /// Flips the camera around the scene.
     /// </summary>
     void flip() {
-        if (timeFlipped + 2f > Time.time) {
-            float lastrotation = transform.rotation.x;
-            transform.RotateAround(
-                new Vector3(transform.position.x, 0f, 0f),
-                Vector3.right,
-                deltaAngle * Time.deltaTime);
+        if (flipping) {
+            // Flip 180 degrees.
+            if (angleFlipped < HALFTURN
+                && transform.rotation.x >= 0f - double.Epsilon
+                && transform.rotation.w >= 0f - double.Epsilon) {
+                float lastrotation = transform.rotation.x;
+                transform.RotateAround(
+                    new Vector3(transform.position.x, 0f, 0f),
+                    Vector3.right,
+                    deltaAngle * Time.deltaTime);
+                angleFlipped += deltaAngle * Time.deltaTime;
+            }
+            else {
+                stopFlipping();
+            }
         }
         else {
-            stopFlipping();
-        }
-    }
+            // Return to flat.
+            float lastx = transform.position.x;
+            if (transform.rotation.x > 0.5f) {
+                // We're upside down.
+                transform.rotation = new Quaternion(
+                    1f,
+                    transform.rotation.y,
+                    transform.rotation.z,
+                    0f);
+                transform.position = new Vector3(lastx, 0f, distance);
+            }
+            else {
+                // we're right side up.
 
-    /// <summary>
-    /// The distance for the camera to travel in order to resemble an arc.
-    /// </summary>
-    public float deltaDistance(float deltaTime) {
-        return distance * Mathf.Sin(Mathf.Deg2Rad * deltaAngle * deltaTime);
+                transform.rotation = new Quaternion(
+                    0f,
+                    transform.rotation.y,
+                    transform.rotation.z,
+                    1f);
+                transform.position = new Vector3(lastx, 0f, -distance);
+            }
+        }
     }
 
     /// <summary>
