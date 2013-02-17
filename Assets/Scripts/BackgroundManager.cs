@@ -120,6 +120,7 @@ public class BackgroundManager : MonoBehaviour {
             Transform next = (Transform)Instantiate(prefab);
             next.position = new Vector3(nextPosition, 0f, transform.position.z);
             next.localScale = new Vector3(size, size, transform.localScale.z);
+            next.rotation = transform.rotation;
             nextPosition += next.localScale.x;
             objectQueue.PushFront(next);
         }
