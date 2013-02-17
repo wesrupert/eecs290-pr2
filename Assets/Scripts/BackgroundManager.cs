@@ -10,6 +10,78 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class BackgroundManager : MonoBehaviour {
+    private class TwoWayQueue<T> {
+        private class Node<N> {
+            public N val;
+            public Node<N> next, prev;
+            public Node() : this(default(N), null, null) { }
+            public Node(N val, Node<N> next, Node<N> prev) {
+                this.val = val;
+                this.next = next;
+                this.prev = prev;
+            }
+        }
+
+        private Node<T> first, last;
+
+        public TwoWayQueue() {
+            first = null;
+            last = null;
+        }
+
+        public T PeekFront() { return first == null ? default(T) : first.val; }
+
+        public T PeekBack() { return last == null ? default(T) : last.val; }
+
+        public T PushFront(T val) {
+            if (first == null || last == null) {
+                first = last = new Node<T>(val, null, null);
+            }
+            else {
+                Node<T> node = new Node<T>(val, first, null);
+                first.prev = node;
+                first = node;
+            }
+
+            return val;
+        }
+
+        public T PushBack(T val) {
+            if (first == null || last == null) {
+                first = last = new Node<T>(val, null, null);
+            }
+            else {
+                Node<T> node = new Node<T>(val, null, last);
+                last.next = node;
+                last = node;
+            }
+
+            return val;
+        }
+
+        public T PopFront() {
+            if (first == null) {
+                return default(T);
+            }
+
+            Node<T> node = first;
+            first.next.prev = null;
+            first = first.next;
+            return node.val;
+        }
+
+        public T PopBack() {
+            if (last == null) {
+                return default(T);
+            }
+
+            Node<T> node = last;
+            last.prev.next = null;
+            last = last.prev;
+            return node.val;
+        }
+    }
+
     /// <summary>
     /// The object the tiles track for tiling.
     /// </summary>
