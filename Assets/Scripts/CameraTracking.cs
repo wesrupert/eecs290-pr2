@@ -4,15 +4,13 @@ using System.Collections;
 public class CameraTracking : MonoBehaviour {
     private const float HALFTURN = 180f;
 
-    public Quaternion r;
-
     /// <summary>
     /// The object that the camera is tracking.
     /// </summary>
     public GameObject trackedObject;
     public bool trackingDelay = true;
     public float trackingSpeed = 0.05f;
-    public float maxTracking = 5f;
+    public float maxTrackingDelay = 5f;
 
     /// <summary>
     /// The distance the camera stays from the scene.
@@ -22,7 +20,7 @@ public class CameraTracking : MonoBehaviour {
     /// <summary>
     /// The angle that the camera changes on each fixed update while moving.
     /// </summary>
-    public float deltaAngle = 120f;
+    public float deltaAngle = 240f;
 
     /// <summary>
     /// Whether or not the camera is moving to the other side.
@@ -32,14 +30,29 @@ public class CameraTracking : MonoBehaviour {
     /// <summary>
     /// The total angle moved during movement.
     /// </summary>
-    public float angleFlipped = 0f;
+    private float angleFlipped = 0f;
+
+    /// <summary>
+    /// Represents the status of the world.
+    /// </summary>
+    public enum Side { Norm, Flip };
+
+    /// <summary>
+    /// The present status of the world.
+    /// </summary>
+    public Side side {
+        get;
+        private set;
+    }
 
     /// <summary>
     /// Use this for initialization.
     /// </summary>
     void Start () {
+        // Set up the camera in its initial position.
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         transform.position = new Vector3(0f, 0f, -distance);
+        side = Sire.Norm;
 
         // TODO: If we don't have a tracked object, find the player and track
         // him.
@@ -49,6 +62,7 @@ public class CameraTracking : MonoBehaviour {
     /// Update is called once per frame.
     /// </summary>
     void Update () {
+        // TODO: The player should be sending a startFlipping message, not us.
         if (Input.GetKeyDown(KeyCode.F) && !flipping) {
             startFlipping();
         }
@@ -82,6 +96,7 @@ public class CameraTracking : MonoBehaviour {
     /// Updates the variables used to track movement and st=naps the camera to its destination.
     /// </summary>
     void stopFlipping() {
+        side = (side == Side.Norm) ? Side.Flip : Side.Norm;
         flipping = false;
     }
 
@@ -91,9 +106,8 @@ public class CameraTracking : MonoBehaviour {
     void flip() {
         if (flipping) {
             // Flip 180 degrees.
-            if (angleFlipped < HALFTURN
-                && transform.rotation.x >= 0f - double.Epsilon
-                && transform.rotation.w >= 0f - double.Epsilon) {
+            if (keepFlipping()) {
+                // && transform.rotation.w >= 0f - double.Epsilon) {
                 float lastrotation = transform.rotation.x;
                 transform.RotateAround(
                     new Vector3(transform.position.x, 0f, 0f),
@@ -143,7 +157,7 @@ public class CameraTracking : MonoBehaviour {
 
             // Clip the distance to the max tracking distance.
             transform.position = new Vector3(
-                bound(transform.position.x, trackedObject.transform.position.x, maxTracking),
+                bound(transform.position.x, trackedObject.transform.position.x, maxTrackingDelay),
                 transform.position.y,
                 transform.position.z);
         }
@@ -151,6 +165,23 @@ public class CameraTracking : MonoBehaviour {
             transform.Translate(
                 Vector3.left
                 * (transform.position.x - trackedObject.transform.position.x));
+        }
+    }
+
+    /// <summary>
+    /// Checks to see if the camera should continue flipping.
+    /// <returns>True if the camera should continue flipping, otherwise false.</returns>
+    /// </summary>
+    bool keepFlipping() {
+        if (side == Side.Norm) {
+            return angleFlipped < HALFTURN
+                && transform.rotation.x >= 0f
+                && transform.rotation.w >= 0f;
+        }
+        else {
+            return angleFlipped < HALFTURN
+                && transform.rotation.x >= 0f
+                && transform.rotation.w >= -1f;
         }
     }
 
