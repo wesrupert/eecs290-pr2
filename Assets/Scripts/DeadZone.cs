@@ -1,3 +1,8 @@
+/// Wes Rupert - wkr3
+/// EECS 290   - Project 02
+/// Purgatory  - DeadZone.cs
+/// Script to control the actions of the dead zones.
+
 using UnityEngine;
 using System.Collections;
 
@@ -10,6 +15,13 @@ public class DeadZone : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+        // TODO: Add animation.
 	}
+
+    void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.name == "Player") {
+            // TODO: tell the player what the cause of death was.
+            collision.gameObject.SendMessage("Die");
+        }
+    }
 }
