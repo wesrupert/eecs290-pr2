@@ -102,7 +102,7 @@ public class BackgroundManager : MonoBehaviour {
     /// </summary>
     public float recycleOffset;
 
-    private float lastPosition, nextPosition;
+    public float lastPosition, nextPosition;
     private TwoWayQueue<Transform> objectQueue;
 
     /// <summary>
@@ -110,11 +110,12 @@ public class BackgroundManager : MonoBehaviour {
     /// </summary>
     void Start () {
         // Calculate the object count.
-        int objectCount = 2 + (int)Mathf.Ceil((2f * recycleOffset) / size);
+        int objectCount = 3 + (int)Mathf.Ceil((2f * recycleOffset) / size);
 
         // Generate the tiles.
         objectQueue = new TwoWayQueue<Transform>();
-        lastPosition = nextPosition = transform.position.x - (recycleOffset + size);
+        nextPosition = transform.position.x - (recycleOffset + size);
+        lastPosition = nextPosition - size;
         for (int i = 0; i < objectCount; i++) {
             Transform next = (Transform)Instantiate(prefab);
             next.position = new Vector3(nextPosition, 0f, transform.position.z);
@@ -133,7 +134,7 @@ public class BackgroundManager : MonoBehaviour {
             Transform last = objectQueue.PopBack();
             last.position = new Vector3(nextPosition, 0f, transform.position.z);
             nextPosition += last.localScale.x;
-            lastPosition -= last.localScale.x;
+            lastPosition += last.localScale.x;
             objectQueue.PushFront(last);
         }
 
