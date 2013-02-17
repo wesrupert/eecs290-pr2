@@ -19,5 +19,17 @@ public class simpleMovement : MonoBehaviour {
         if (Input.GetKey(KeyCode.RightArrow)) {
             transform.Translate(Vector3.left * -speed * Time.deltaTime);
         }
+
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            transform.Translate(Vector3.up * speed * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow)) {
+            transform.Translate(Vector3.up * -speed * Time.deltaTime);
+        }
+    }
+
+    public void Die() {
+        transform.position = Vector3.zero;
     }
 }

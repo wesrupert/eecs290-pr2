@@ -1,3 +1,8 @@
+/// Wes Rupert - wkr3
+/// EECS 290   - Project 02
+/// Purgatory  - CameraTracking.cs
+/// Script to control the camera tracking and flip mechanic.
+
 using UnityEngine;
 using System.Collections;
 
@@ -110,8 +115,6 @@ public class CameraTracking : MonoBehaviour {
         if (flipping) {
             // Flip 180 degrees.
             if (keepFlipping()) {
-                // && transform.rotation.w >= 0f - double.Epsilon) {
-                float lastrotation = transform.rotation.x;
                 transform.RotateAround(
                     new Vector3(transform.position.x, 0f, 0f),
                     Vector3.right,
