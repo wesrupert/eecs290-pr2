@@ -103,24 +103,24 @@ public class BackgroundManager : MonoBehaviour {
     public float recycleOffset;
 
     private float lastPosition, nextPosition;
-    private Queue<Transform> objectQueue;
+    private TwoWayQueue<Transform> objectQueue;
 
     /// <summary>
     /// Use this for initialization
     /// </summary>
     void Start () {
         // Calculate the object count.
-        int objectCount = 1 + (int)Mathf.Ceil((2f * recycleOffset) / size);
+        int objectCount = 2 + (int)Mathf.Ceil((2f * recycleOffset) / size);
 
         // Generate the tiles.
-        objectQueue = new Queue<Transform>(objectCount);
-        lastPosition = nextPosition = transform.position.x - recycleOffset;
+        objectQueue = new TwoWayQueue<Transform>();
+        lastPosition = nextPosition = transform.position.x - (recycleOffset + size);
         for (int i = 0; i < objectCount; i++) {
             Transform next = (Transform)Instantiate(prefab);
             next.position = new Vector3(nextPosition, 0f, transform.position.z);
             next.localScale = new Vector3(size, size, transform.localScale.z);
             nextPosition += next.localScale.x;
-            objectQueue.Enqueue(next);
+            objectQueue.PushFront(next);
         }
     }
     
@@ -129,18 +129,20 @@ public class BackgroundManager : MonoBehaviour {
     /// </summary>
     void Update () {
         // Recycle the out of frame tile.
-        if (objectQueue.Peek().position.x + recycleOffset < trackedObject.transform.position.x) {
-            Transform last = objectQueue.Dequeue();
+        if (objectQueue.PeekFront().position.x - recycleOffset < trackedObject.transform.position.x) {
+            Transform last = objectQueue.PopBack();
             last.position = new Vector3(nextPosition, 0f, transform.position.z);
             nextPosition += last.localScale.x;
-            objectQueue.Enqueue(last);
+            lastPosition -= last.localScale.x;
+            objectQueue.PushFront(last);
         }
 
-        if (objectQueue.Peek().position.x - recycleOffset > trackedObject.transform.position.x) {
-            Transform last = objectQueue.Dequeue();
-            last.position = new Vector3(lastPosition, 0f, transform.position.z);
-            nextPosition -= last.localScale.x;
-            objectQueue.Enqueue(last);
+        if (objectQueue.PeekBack().position.x + recycleOffset > trackedObject.transform.position.x) {
+            Transform first = objectQueue.PopFront();
+            first.position = new Vector3(lastPosition, 0f, transform.position.z);
+            nextPosition -= first.localScale.x;
+            lastPosition -= first.localScale.x;
+            objectQueue.PushBack(first);
         }
     }
 }
