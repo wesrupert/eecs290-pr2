@@ -52,10 +52,12 @@ public class CameraTracking : MonoBehaviour {
         // Set up the camera in its initial position.
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         transform.position = new Vector3(0f, 0f, -distance);
-        side = Sire.Norm;
+        side = Side.Norm;
 
-        // TODO: If we don't have a tracked object, find the player and track
-        // him.
+        // If we don't have a tracked object, find the player.
+        if (trackedObject == null) {
+            trackedObject = GameObject.Find("Player");
+        }
     }
 	
     /// <summary>
@@ -73,8 +75,6 @@ public class CameraTracking : MonoBehaviour {
         if (Input.GetKey(KeyCode.F)) {
             startFlipping();
         }
-
-        r = transform.rotation;
     }
 
     /// <summary>
@@ -98,6 +98,9 @@ public class CameraTracking : MonoBehaviour {
     void stopFlipping() {
         side = (side == Side.Norm) ? Side.Flip : Side.Norm;
         flipping = false;
+
+        // TODO: Send a signal to the player that we're done, so the ghost can
+        // change.
     }
 
     /// <summary>
