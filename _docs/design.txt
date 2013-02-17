@@ -20,5 +20,10 @@ Entities:
 - Goal (middle line?)
 
 Player: Andrew Heckman
-Platform: Blake Needleman
+Player Ghost: Andrew Heckman
+
+Platforms: Blake Needleman
+
 Flip Mechanic: Wes Rupert
+Dead Zones: Wes Rupert
+Background: Wes Rupert
