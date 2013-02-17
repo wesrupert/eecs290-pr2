@@ -45,4 +45,5 @@ public class Player : MonoBehaviour {
 		transform.position = Vector3.zero;
 		//TODO: respawn at checkpoint
 	}
+}
 
