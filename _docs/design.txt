@@ -3,6 +3,8 @@ Game Design:
 Name:
 - Purgatory
 
+Single Player
+
 Entities:
 - Out of bounds areas (anti-goal)
 - Platforms
@@ -27,3 +29,26 @@ Platforms: Blake Needleman
 Flip Mechanic: Wes Rupert
 Dead Zones: Wes Rupert
 Background: Wes Rupert
+
+Standards:
+-falling out of screen will kill you
+-gravity
+-dieing will respawn you at an earlier point (checkpoint)
+-physics interactions between platform and character
+-lives/collectibles
+
+Innovations:
+-Flip mechanic
+-goal is above player
+-"ghost player" above you
+
+Primary conflict?
+-the level puzzle
+
+Actions player takes?
+-choosing to jump
+-choosing to flip
+-choosing to move (also mid-jump and mid-flip)
+
+Ideal level length?
+Pacing of puzzles?
