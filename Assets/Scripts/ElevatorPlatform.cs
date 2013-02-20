@@ -7,6 +7,7 @@ public class ElevatorPlatform : MonoBehaviour {
 	public Vector3 lowerBound;
 	private bool reachedUpper = false;
 	private bool reachedLower = false;
+    public float speedX = 0.5f, speedY = 1.5f;
 	
 	// Use this for initialization
 	void Start () {
@@ -20,8 +21,8 @@ public class ElevatorPlatform : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		float HorizontalIncrement = (float).5*Time.fixedDeltaTime;
-		float VerticalIncrement = (float)1.5*Time.fixedDeltaTime;
+		float HorizontalIncrement = speedX*Time.fixedDeltaTime;
+		float VerticalIncrement = speedY*Time.fixedDeltaTime;
 		
 		//left and right floating platform
 		if((upperBound.x - lowerBound.x) != 0) {

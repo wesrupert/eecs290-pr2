@@ -10,25 +10,25 @@ public class GameManager : MonoBehaviour {
 
     // Format strings for the gui.
     private const string F_LEVEL = "{0} - {1}";
-    private const string F_SCORE = "{0} lives - score: {1}";
+    private const string F_SCORE = "{0} lives - score: {1:.2}";
 
     /// <summary>
     /// Enumeration of possible states for the game.
     /// </summary>
     public enum GameState {
-        StartingGame,  // TODO: Implement
-        StartingLevel, // TODO: Implement
-        PlayingLevel,  // TODO: Implement
-        Paused,        // TODO: Implement
-        LevelComplete, // TODO: Implement
-        GameWin,       // TODO: Implement
-        GameLose       // TODO: Implement
+        GameStarting,  // TODO: Implement.
+        GameWon,       // TODO: Implement.
+        GameLost,      // TODO: Implement.
+        LevelStarting, // TODO: Implement.
+        LevelPlaying,  // TODO: Implement.
+        LevelPaused,   // TODO: Implement.
+        LevelCompleted // TODO: Implement.
     };
 
     /// <summary>
     /// The current state of the game.
     /// </summary>
-    public GameState state = GameState.StartingGame;
+    public GameState state = GameState.GameStarting;
 
     // Global variables for the game.
     public string level  = D_LEVEL;
@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour {
     /// Update is called once per frame.
     /// </summary>
     void Update() {
+        // Update the score.
+        score += Time.deltaTime;
     }
 
     /// <summary>
@@ -54,9 +56,36 @@ public class GameManager : MonoBehaviour {
     /// OnGUI is called once per frame.
     /// </summary>
     void OnGUI() {
+        switch (state) {
+            case GameState.GameStarting :
+                // TODO: Create GUI for GameStarting.
+                break;
+            case GameState.GameWon :
+                // TODO: Create GUI for GameWon.
+                break;
+            case GameState.GameLost :
+                // TODO: Create GUI for GameLost.
+                break;
+            case GameState.LevelStarting :
+                // TODO: Create GUI for LevelStarting.
+                break;
+            case GameState.LevelPlaying :
+                GUI.Box(new Rect(0, 0, 150, 25), // Player - Level
+                        string.Format(F_LEVEL, player, level));
+                GUI.Box(new Rect(Screen.width - 150, 0, 150, 25), // Lives lives - Score
+                        string.Format(F_SCORE, lives, score));
+                break;
+            case GameState.LevelPaused :
+                // TODO: Create GUI for LevelPaused.
+                break;
+            case GameState.LevelCompleted :
+                // TODO: Create GUI for LevelCompleted.
+                break;
+            default :
+                // Nothing is drawn when we don't know what's going on.
+                break;
+        }
         // TODO: Add player name hook.
-        GUI.Box(new Rect(0, 0, 150, 25), string.Format(F_LEVEL, player, level));
-        GUI.Box(new Rect(Screen.width - 150, 0, 150, 25), string.Format(F_SCORE, lives, score));
     }
 
     /// <summary>
