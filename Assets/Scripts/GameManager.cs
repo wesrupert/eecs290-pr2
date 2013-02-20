@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
 
     // Format strings for the gui.
     private const string F_LEVEL = "{0} - {1}";
-    private const string F_SCORE = "{0} lives - score: {1:.2}";
+    private const string F_SCORE = "{0} lives - score: {1}";
 
     /// <summary>
     /// Enumeration of possible states for the game.
@@ -36,6 +36,10 @@ public class GameManager : MonoBehaviour {
     public float  score  = D_SCORE;
     public int    lives  = D_LIVES;
 
+    // Styles for various GUIs
+    public GUIStyle titleStyle, subtitleStyle;
+    public GUIStyle levelStyle, scoreStyle;
+
     /// <summary>
     /// Use this for initialization.
     /// </summary>
@@ -58,7 +62,10 @@ public class GameManager : MonoBehaviour {
     void OnGUI() {
         switch (state) {
             case GameState.GameStarting :
-                // TODO: Create GUI for GameStarting.
+                GUI.Box(new Rect(Screen.width / 2 - 150, Screen.height / 2 - 50, 300, 100),
+                    "Purgatory", titleStyle);
+                GUI.Box(new Rect(Screen.width / 2 - 150, Screen.height / 2 - 50, 300, 100),
+                        "The fight for equilibrium", subtitleStyle);
                 break;
             case GameState.GameWon :
                 // TODO: Create GUI for GameWon.
@@ -71,9 +78,9 @@ public class GameManager : MonoBehaviour {
                 break;
             case GameState.LevelPlaying :
                 GUI.Box(new Rect(0, 0, 150, 25), // Player - Level
-                        string.Format(F_LEVEL, player, level));
+                        string.Format(F_LEVEL, player, level), levelStyle);
                 GUI.Box(new Rect(Screen.width - 150, 0, 150, 25), // Lives lives - Score
-                        string.Format(F_SCORE, lives, score));
+                        string.Format(F_SCORE, lives, score), scoreStyle);
                 break;
             case GameState.LevelPaused :
                 // TODO: Create GUI for LevelPaused.
@@ -94,6 +101,4 @@ public class GameManager : MonoBehaviour {
     public void LevelComplete() {
         // TODO: Implement level switching.
     }
-
-
 }
