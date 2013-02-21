@@ -5,6 +5,7 @@ using System.Collections;
 public class Player : MonoBehaviour {
 	
 	public float speed = 5f;
+	public int jumpheight = 8;
 	public int jumptime = 0;
 	public bool isGrounded = true;
 	// Use this for initialization
@@ -26,11 +27,13 @@ public class Player : MonoBehaviour {
 		//NOTE: Right now they don't work merely because we don't have a platform. I think it'll work once we do. 
 		if(Input.GetKey (KeyCode.UpArrow) & isGrounded == true){
 			rigidbody.velocity = new Vector3(0,15,0);
-			jumptime++;
+		}
+		if(isGrounded == false){
+				jumptime++;	
 		}
 		//how high the player can jump
-		if(jumptime>8){
-			rigidbody.velocity = new Vector3(0,-20,0);
+		if(jumptime>jumpheight){
+			rigidbody.velocity = new Vector3(0,-15,0);
 		}
 		//flipping mechanic
 		if(Input.GetKeyDown(KeyCode.Space)){
@@ -43,6 +46,7 @@ public class Player : MonoBehaviour {
 	void OnCollisionEnter(Collision collision){
 		if(collision.gameObject.name == "Floor" | collision.gameObject.name == "Platform"){
 			isGrounded = true;
+			this.rigidbody.velocity = new Vector3(0,0,0);
 			jumptime = 0;
 		}
 	}
