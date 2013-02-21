@@ -44,7 +44,7 @@ public class Player : MonoBehaviour {
 	//checks to see if collided with ground 
 	//NOTE: we will need to set up the collider on the player's feet for this to work I think
 	void OnCollisionEnter(Collision collision){
-		if(collision.gameObject.name == "Floor" | collision.gameObject.name == "Platform"){
+		if(collision.gameObject.tag == "Platform") {
 			isGrounded = true;
 			this.rigidbody.velocity = new Vector3(0,0,0);
 			jumptime = 0;
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour {
 	
 	//checks to see if jumping
 	void OnCollisionExit(Collision collision){
-		if(collision.gameObject.name == "Floor" | collision.gameObject.name == "Platform"){
+		if(collision.gameObject.tag == "Platform") {
 			isGrounded = false;
 		}
 	}
