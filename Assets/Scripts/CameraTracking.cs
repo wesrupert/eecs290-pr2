@@ -69,17 +69,8 @@ public class CameraTracking : MonoBehaviour {
     /// Update is called once per frame.
     /// </summary>
     void Update () {
-        // TODO: The player should be sending a startFlipping message, not us.
-        if (Input.GetKeyDown(KeyCode.F) && !flipping) {
-            startFlipping();
-        }
-
         flip();
         track();
-
-        if (Input.GetKey(KeyCode.F)) {
-            startFlipping();
-        }
     }
 
     /// <summary>
@@ -93,8 +84,10 @@ public class CameraTracking : MonoBehaviour {
     /// Updates the variables used to track movement.
     /// </summary>
     void startFlipping() {
-        flipping = true;
-        angleFlipped = 0f;
+        if (!flipping) {
+            flipping = true;
+            angleFlipped = 0f;
+        }
     }
 
     /// <summary>
@@ -106,6 +99,9 @@ public class CameraTracking : MonoBehaviour {
 
         // TODO: Send a signal to the player that we're done, so the ghost can
         // change.
+        
+        // Reverse the gravity.
+        Physics.gravity = Physics.gravity * -1f;
     }
 
     /// <summary>

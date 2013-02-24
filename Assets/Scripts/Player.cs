@@ -1,20 +1,20 @@
 using UnityEngine;
 using System.Collections;
-
+//Andrew Heckman
 //TODO: implement ghost
 public class Player : MonoBehaviour {
 	
 	public float speed = 5f;
-	public float jumpSpeed = 0.001f;
-	public float gravity = 9.8f;
+	public int jumpheight = 8;
+	public int jumptime = 0;
+	public bool isGrounded = true;
 	// Use this for initialization
 	void Start () {
 		//nothing yet
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		var position = transform.position;
+	void FixedUpdate () {
 		if(Input.GetKey(KeyCode.LeftArrow)){
 			//physics to move
 			transform.Translate(Vector3.left*Time.deltaTime*speed);
@@ -23,17 +23,40 @@ public class Player : MonoBehaviour {
 			//same physics
 			transform.Translate(Vector3.left*Time.deltaTime*-speed);
 		}
-		if(Input.GetKey (KeyCode.UpArrow)){
-			//jump physics	
-			//TODO: Fix jump physics so they actually work
-			position.y += jumpSpeed - gravity*Time.deltaTime;
-			transform.position = position;
+		//jumping physics
+		//NOTE: Right now they don't work merely because we don't have a platform. I think it'll work once we do. 
+		if(Input.GetKey (KeyCode.UpArrow) & isGrounded == true){
+			rigidbody.velocity = new Vector3(0,15,0);
 		}
+		if(isGrounded == false){
+				jumptime++;	
+		}
+		//how high the player can jump
+		if(jumptime>jumpheight){
+			rigidbody.velocity = new Vector3(0,-15,0);
+		}
+		//flipping mechanic
 		if(Input.GetKeyDown(KeyCode.Space)){
 			flip();
 		}
 	}
 	
+	//checks to see if collided with ground 
+	//NOTE: we will need to set up the collider on the player's feet for this to work I think
+	void OnCollisionEnter(Collision collision){
+		if(collision.gameObject.tag == "Platform") {
+			isGrounded = true;
+			this.rigidbody.velocity = new Vector3(0,0,0);
+			jumptime = 0;
+		}
+	}
+	
+	//checks to see if jumping
+	void OnCollisionExit(Collision collision){
+		if(collision.gameObject.tag == "Platform") {
+			isGrounded = false;
+		}
+	}
 	//flip mechanic that flips the camera
 	void flip(){
 		GameObject camera = GameObject.Find("Camera");
