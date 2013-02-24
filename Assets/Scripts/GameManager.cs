@@ -12,14 +12,19 @@ public class GameManager : MonoBehaviour {
     private const float  D_SCORE  = 0f;
     private const int    D_LIVES  = 3;
 
-    // Format strings for the gui.
-    private const string F_LEVEL = "{0} - {1}";
-    private const string F_SCORE = "{0} lives - score: {1}";
-
     // Constant strings for the gui.
-    private const string S_WIN = "You won!";
+    private const string S_COUNTDOWN = "Start in {0}";
+    private const string S_GAMEOVER = "No lives - Game Over!";
+    private const string S_GO = "GO!";
+    private const string S_LEVEL = "{0} - {1}";
+    private const string S_LIVES = "{0} lives left";
+    private const string S_LOSE = "You died!";
     private const string S_PLAYAGAIN = "Again!";
+    private const string S_QUIT = "QUIT";
+    private const string S_SCORE = "{0} lives - score: {1:N2}";
     private const string S_STARTGAME = "PLAY";
+    private const string S_TRYAGAIN = "GO";
+    private const string S_WIN = "You won!";
 
     // GUI boxes for displaying text at various points in the game.
     // Implemented as properties since they update in real time but are used as constants.
@@ -93,6 +98,8 @@ public class GameManager : MonoBehaviour {
     public GUIStyle titleStyle, subtitleStyle;
     public GUIStyle levelStyle, scoreStyle;
 
+    private float startTime;
+
     /// <summary>
     /// Use this for initialization.
     /// </summary>
@@ -105,6 +112,26 @@ public class GameManager : MonoBehaviour {
     void Update() {
         // Update the score.
         score += Time.deltaTime;
+
+        switch (state) {
+            case GameStarting :
+                break;
+            case GameWon :
+                break;
+            case GameLost :
+                break;
+            case LevelStarting :
+                if (startTime - Time.realtimeSinceStartup) {
+                    state = GameState.LevelPlaying;
+                }
+                break;
+            case LevelPlaying :
+                break;
+            case LevelPaused :
+                break;
+            case LevelCompleted :
+                break;
+        }
     }
 
     /// <summary>
@@ -118,6 +145,7 @@ public class GameManager : MonoBehaviour {
                 GUI.Box(G_CENTER_BIG, GAMETITLE, titleStyle);
                 GUI.Box(G_CENTER_BIG, GAMESUBTITLE, subtitleStyle);
                 if (GUI.Button(G_CENTER_BUTTON, S_STARTGAME)) {
+                    startTime = Time.realtimeSinceStartup;
                     // TODO: Implement play game.
                 }
                 break;
@@ -128,14 +156,35 @@ public class GameManager : MonoBehaviour {
                 }
                 break;
             case GameState.GameLost :
-                // TODO: Create GUI for GameLost.
+                GUI.Box(G_CENTER_BIG, S_LOSE, titleStyle);
+                if (lives >= 0) {
+                    GUI.Box(G_CENTER_BIG, string.Format(S_LIVES, lives));
+                    if (GUI.Button(G_LEFT_BUTTON, S_TRYAGAIN)) {
+                        // TODO: Implement respawn.
+                    }
+                    if (GUI.Button(G_RIGHT_BUTTON, S_QUIT)) {
+                        // TODO: Implement quit.
+                    }
+                }
+                else {
+                    GUI.Box(G_CENTER_BIG, S_GAMEOVER, subtitleStyle);
+                    if (GUI.Button(G_CENTER_BUTTON, S_QUIT)) {
+                        // TODO: Implement quit.
+                    }
+                }
                 break;
             case GameState.LevelStarting :
-                // TODO: Create GUI for LevelStarting.
+                int countdown = (int)(Mathf.Ceil(startTime - Time.realtimeSinceStartup));
+                if (countdown > 0) {
+                    GUI.Box(G_CENTER_BIG, string.Format(S_COUNTDOWN, countdown), titleStyle);
+                }
+                else {
+                    GUI.Box(G_CENTER_BIG, S_GO, titleStyle);
+                }
                 break;
             case GameState.LevelPlaying :
-                GUI.Box(G_TOP_SMALL, string.Format(F_LEVEL, player, level), levelStyle);
-                GUI.Box(G_TOP_SMALL, string.Format(F_SCORE, lives, score), scoreStyle);
+                GUI.Box(G_TOP_SMALL, string.Format(S_LEVEL, player, level), levelStyle);
+                GUI.Box(G_TOP_SMALL, string.Format(S_SCORE, lives, score), scoreStyle);
                 break;
             case GameState.LevelPaused :
                 // TODO: Create GUI for LevelPaused.
