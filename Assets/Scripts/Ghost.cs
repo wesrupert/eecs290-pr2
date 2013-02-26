@@ -64,7 +64,7 @@ public class Ghost : MonoBehaviour {
 	
 	//switches ghost with player
 	void Switch(){
-		gameObject.AddComponent("Player");
-		rigidbody.useGravity(true);
+		//gameObject.AddComponent("Player");
+		//rigidbody.useGravity(true);
 	}
 }
