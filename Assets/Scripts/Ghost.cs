@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+//Andrew Heckman
 //ideally this will just be almost another instance of player, but with gravity removed
 public class Ghost : MonoBehaviour {
 		
