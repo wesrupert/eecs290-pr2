@@ -3,6 +3,7 @@ using System.Collections;
 //Andrew Heckman
 //TODO: implement ghost
 public class Player : MonoBehaviour {
+    public string playerName = "Player 1";
 	
 	public float speed = 5f;
 	public int jumpheight = 8;
@@ -60,8 +61,8 @@ public class Player : MonoBehaviour {
 	void flip(){
 		GameObject camera = GameObject.Find("Camera");
 		camera.SendMessage("startFlipping");
-		gameObject.AddComponent("Ghost");
-		rigidbody.useGravity(false);
+		//gameObject.AddComponent("Ghost");
+		//rigidbody.useGravity(false);
 	}
 	
 	//resets the character after death
