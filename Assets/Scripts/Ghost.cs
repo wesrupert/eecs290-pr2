@@ -1,70 +1,50 @@
 using UnityEngine;
 using System.Collections;
 //Andrew Heckman
-//ideally this will just be almost another instance of player, but with gravity removed
+
 public class Ghost : MonoBehaviour {
-		
-	public float speed = 5f;
-	public int jumpheight = 8;
-	public int jumptime = 0;
-	public bool isGrounded = true;
+	public bool canFlip = true;	
+	GameObject player = GameObject.Find("Player");
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
+	//TODO:checks position of player and mimics it invertedly (not a word)
 	void Update () {
-		if(Input.GetKey(KeyCode.LeftArrow)){
-			//physics to move
-			transform.Translate(Vector3.left*Time.deltaTime*speed);
-		}
-		if(Input.GetKey (KeyCode.RightArrow)){
-			//same physics
-			transform.Translate(Vector3.left*Time.deltaTime*-speed);
-		}
-				//jumping physics
-		if(Input.GetKey (KeyCode.UpArrow) & isGrounded == true){
-			rigidbody.velocity = new Vector3(0,-15,0);
-		}
-		if(isGrounded == false){
-				jumptime++;	
-		}
-		//how high the player can jump
-		if(jumptime>jumpheight){
-			rigidbody.velocity = new Vector3(0,15,0);
-		}
-				//switch ghost on flip
-		if(Input.GetKeyDown(KeyCode.Space)){
-			Switch();
-		}
+		var playerPos = player.transform.position;
+		var myPos = this.transform.position;
+		myPos.x = playerPos.x;
+		myPos.y = -playerPos.y;
+		this.transform.position = myPos;
+		
 	}
-	
-		//checks to see if collided with ground 
-	//NOTE: we will need to set up the collider on the player's feet for this to work I think
+
+	//removes player flip rights if inside object
+	//don't want player to kill themselves on flip
 	void OnCollisionEnter(Collision collision){
-		if(collision.gameObject.tag == "Platform") {
-			isGrounded = true;
-			this.rigidbody.velocity = new Vector3(0,0,0);
-			jumptime = 0;
+		if(collision.gameObject.tag != "Platform") {
+			canFlip = false;
+			player.SendMessage("flippableInvert", canFlip);
 		}
 	}
 	
-	//checks to see if jumping
+	//resumes flippableness after leaving object
 	void OnCollisionExit(Collision collision){
-		if(collision.gameObject.tag == "Platform") {
-			isGrounded = false;
+		if(collision.gameObject.tag != "Platform") {
+			canFlip = true;
+			player.SendMessage("flippableInvert", canFlip);
 		}
 	}
 	
-	void Die(){
-		transform.position = new Vector3(0,15,0);
-		//TODO: respawn at checkpoint
-	}
 	
 	//switches ghost with player
 	void Switch(){
-		//gameObject.AddComponent("Player");
-		//rigidbody.useGravity(true);
+		var position = transform.position;
+		GameObject player = GameObject.Find("Player");
+		position = player.transform.position;
+		player.transform.position = this.transform.position;
+		transform.position = position;
 	}
 }
