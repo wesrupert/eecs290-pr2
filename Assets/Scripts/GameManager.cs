@@ -17,29 +17,42 @@ public class GameManager : MonoBehaviour {
     private const string D_LEVEL  = "New level";
     private const float  D_SCORE  = 0f;
     private const int    D_LIVES  = 3;
+    private const int    D_SWIDTH = 200;
+    private const float  D_TIMESPEED = 2f;
 
     // Constant strings for the gui.
     private const string S_COUNTDOWN = "Start in {0}";
-    private const string S_GAMEOVER = "No lives - Game Over!";
-    private const string S_GO = "GO!";
     private const string S_LEVEL = "{0} - {1}";
     private const string S_LIVES = "{0} lives left";
-    private const string S_LOSE = "You died!";
-    private const string S_NEXTLEVEL = "Proceeding to next level...";
+    private const string S_ONELIFE = "1 life left";
     private const string S_PAUSED = "Paused.";
-    private const string S_PLAYAGAIN = "Again!";
-    private const string S_QUIT = "QUIT";
     private const string S_SCORE = "{0} lives - score: {1:N2}";
-    private const string S_STARTGAME = "PLAY";
-    private const string S_TRYAGAIN = "GO";
-    private const string S_WIN = "You won!";
-    private const string S_WINLEVEL = "Level complete!";
+
+    // Constant values for splash screens.
+    private const float N_SPLASH_W      = 1280, N_SPLASH_H      = 960;
+    private const float N_TITLE_START_X = 333,  N_TITLE_START_Y = 453;
+    private const float N_TITLE_START_W = 595,  N_TITLE_START_H = 132;
+    private const float N_NEWGAME_X     = 419,  N_NEWGAME_Y     = 451;
+    private const float N_NEWGAME_W     = 479,  N_NEWGAME_H     = 130;
+    private const float N_DIED_GO_X     = 134,  N_DIED_GO_Y     = 521;
+    private const float N_DIED_GO_W     = 360,  N_DIED_GO_H     = 110;
+    private const float N_DIED_QUIT_X   = 702,  N_DIED_QUIT_Y   = 524;
+    private const float N_DIED_QUIT_W   = 357,  N_DIED_QUIT_H   = 110;
 
     // Length of a countdown.
     private const float N_COUNTDOWN = 3f;
 
     // GUI boxes for displaying text at various points in the game.
     // Implemented as properties since they update in real time but are used as constants.
+    private Rect G_TITLE {
+        get {
+            return new Rect(
+                    0,
+                    0,
+                    Screen.width,
+                    Screen.height);
+        }
+    }
     private Rect G_CENTER_BIG {
         get {
             return new Rect(
@@ -49,36 +62,62 @@ public class GameManager : MonoBehaviour {
                     100);
         }
     }
-    private Rect G_TOP_SMALL {
+    private Rect G_TOP_SMALL_LEFT {
+        get { return new Rect(0, 0, swidth, 25); }
+    }
+    private Rect G_TOP_SMALL_RIGHT {
+        get { return new Rect(Screen.width - swidth, 0, swidth, 25); }
+    }
+    private Rect G_LIVESLEFT {
         get {
-            return new Rect(0, 0, Screen.width, 25);
+            float screenX = (Screen.width * (N_DIED_GO_X + N_DIED_GO_W) / N_SPLASH_W);
+            float screenY = Screen.height * N_DIED_GO_Y / N_SPLASH_H;
+            float screenW = (Screen.width * N_DIED_QUIT_X / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_DIED_QUIT_Y + N_DIED_QUIT_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
         }
     }
-    private Rect G_CENTER_BUTTON {
+
+    // GUI boxes for placing buttons over the splash screens.
+    private Rect B_TITLE_START {
         get {
-            return new Rect(
-                    Screen.width / 2 - 40,
-                    Screen.height / 2 + 60,
-                    80,
-                    25);
+            float screenX = Screen.width * N_TITLE_START_X / N_SPLASH_W;
+            float screenY = Screen.height * N_TITLE_START_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_TITLE_START_X + N_TITLE_START_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_TITLE_START_Y + N_TITLE_START_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
         }
     }
-    private Rect G_LEFT_BUTTON {
+    private Rect B_NEWGAME {
         get {
-            return new Rect(
-                    Screen.width / 2 - 200,
-                    Screen.height / 2 + 60,
-                    80,
-                    25);
+            float screenX = Screen.width * N_NEWGAME_X / N_SPLASH_W;
+            float screenY = Screen.height * N_NEWGAME_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_NEWGAME_X + N_NEWGAME_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_NEWGAME_Y + N_NEWGAME_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
         }
     }
-    private Rect G_RIGHT_BUTTON {
+    private Rect B_DIED_GO {
         get {
-            return new Rect(
-                    Screen.width / 2 + 200,
-                    Screen.height / 2 + 60,
-                    80,
-                    25);
+            float screenX = Screen.width * N_DIED_GO_X / N_SPLASH_W;
+            float screenY = Screen.height * N_DIED_GO_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_DIED_GO_X + N_DIED_GO_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_DIED_GO_Y + N_DIED_GO_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
+        }
+    }
+    private Rect B_DIED_QUIT {
+        get {
+            float screenX = Screen.width * N_DIED_QUIT_X / N_SPLASH_W;
+            float screenY = Screen.height * N_DIED_QUIT_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_DIED_QUIT_X + N_DIED_QUIT_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_DIED_QUIT_Y + N_DIED_QUIT_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
         }
     }
 
@@ -105,11 +144,14 @@ public class GameManager : MonoBehaviour {
     public string nextLevel;
     public string level  = D_LEVEL;
     public float  score  = D_SCORE;
+    public float  timespeed = D_TIMESPEED;
     public int    lives  = D_LIVES;
+    public int    swidth = D_SWIDTH;
+    public Vector3 playerSpawn = Vector3.zero;
 
     // Styles for various GUIs
-    public GUIStyle titleStyle, subtitleStyle;
-    public GUIStyle levelStyle, scoreStyle;
+    public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle;
+    public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry;
 
     private float startTime, timeScale;
 
@@ -117,6 +159,7 @@ public class GameManager : MonoBehaviour {
     /// Use this for initialization.
     /// </summary>
     void Start() {
+        Time.timeScale = timespeed;
         startTime = Time.realtimeSinceStartup;
         Physics.gravity = Vector3.down * GRAVITY;
     }
@@ -159,41 +202,44 @@ public class GameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Creates the GUI for the game.
-    ///
-    /// OnGUI is called once per frame.
+    /// Creates the GUI for the game. OnGUI is called once per frame.
     /// </summary>
     void OnGUI() {
         switch (state) {
             case GameState.GameStarting :
-                GUI.Box(G_CENTER_BIG, GAMETITLE, titleStyle);
-                GUI.Box(G_CENTER_BIG, GAMESUBTITLE, subtitleStyle);
-                if (GUI.Button(G_CENTER_BUTTON, S_STARTGAME)) {
+                GUISplashScreen(titleSplash);
+                if (GUI.Button(B_TITLE_START, string.Empty)) {
                     Application.LoadLevel(nextLevel);
                 }
                 break;
             case GameState.GameWon :
-                GUI.Box(G_CENTER_BIG, S_WIN, titleStyle);
-                if (GUI.Button(G_CENTER_BUTTON, S_PLAYAGAIN)) {
+                GUISplashScreen(winSplash);
+                if (GUI.Button(B_NEWGAME, string.Empty)) {
                     Application.LoadLevel(STARTSCREEN);
                 }
                 break;
             case GameState.GameLost :
-                GUI.Box(G_CENTER_BIG, S_LOSE, titleStyle);
-                if (lives >= 0) {
-                    GUI.Box(G_CENTER_BIG, string.Format(S_LIVES, lives));
-                    if (GUI.Button(G_LEFT_BUTTON, S_TRYAGAIN)) {
+                if (lives > 0) {
+                    GUISplashScreen(dieSplash);
+                    if (lives == 1) {
+                        GUI.Box(G_LIVESLEFT, S_ONELIFE, livesLeftStyle);
+                    }
+                    else {
+                        GUI.Box(G_LIVESLEFT, string.Format(S_LIVES, lives), livesLeftStyle);
+                    }
+
+                    if (GUI.Button(B_DIED_GO, string.Empty)) {
                         lives--;
                         player.SendMessage("Respawn");
                         state = GameState.LevelStarting;
                     }
-                    if (GUI.Button(G_RIGHT_BUTTON, S_QUIT)) {
+                    if (GUI.Button(B_DIED_QUIT, string.Empty)) {
                         Application.LoadLevel(STARTSCREEN);
                     }
                 }
                 else {
-                    GUI.Box(G_CENTER_BIG, S_GAMEOVER, subtitleStyle);
-                    if (GUI.Button(G_CENTER_BUTTON, S_QUIT)) {
+                    GUISplashScreen(dieSplashNoRetry);
+                    if (GUI.Button(B_NEWGAME, string.Empty)) {
                         Application.LoadLevel(STARTSCREEN);
                     }
                 }
@@ -201,22 +247,18 @@ public class GameManager : MonoBehaviour {
             case GameState.LevelStarting :
                 int countdown = (int)(Mathf.Ceil(startTime + N_COUNTDOWN - Time.realtimeSinceStartup));
                 if (countdown > 0) {
-                    GUI.Box(G_CENTER_BIG, string.Format(S_COUNTDOWN, countdown), titleStyle);
-                }
-                else {
-                    GUI.Box(G_CENTER_BIG, S_GO, titleStyle);
+                    GUI.Box(G_CENTER_BIG, string.Format(S_COUNTDOWN, countdown), countdownStyle);
                 }
                 break;
             case GameState.LevelPlaying :
-                GUI.Box(G_TOP_SMALL, string.Format(S_LEVEL, player.playerName, level), levelStyle);
-                GUI.Box(G_TOP_SMALL, string.Format(S_SCORE, lives, score), scoreStyle);
+                GUI.Box(G_TOP_SMALL_LEFT, string.Format(S_LEVEL, player.playerName, level), levelStyle);
+                GUI.Box(G_TOP_SMALL_RIGHT, string.Format(S_SCORE, lives, score), scoreStyle);
                 break;
             case GameState.LevelPaused :
-                GUI.Box(G_CENTER_BIG, S_PAUSED, subtitleStyle);
+                GUI.Box(G_CENTER_BIG, S_PAUSED, countdownStyle);
                 break;
             case GameState.LevelCompleted :
-                GUI.Box(G_CENTER_BIG, S_WINLEVEL, titleStyle);
-                GUI.Box(G_CENTER_BIG, S_NEXTLEVEL, subtitleStyle);
+                GUISplashScreen(titleSplash); // TODO: Change to levelcomplete splash.
                 break;
             default :
                 // Nothing is drawn when we don't know what's going on.
@@ -233,5 +275,12 @@ public class GameManager : MonoBehaviour {
     private void unpause() {
         Time.timeScale = timeScale;
         state = GameState.LevelPlaying;
+    }
+
+    private void GUISplashScreen(GUIStyle screen) {
+        GUI.Box(
+            new Rect(0, 0, Screen.width, Screen.height),
+            string.Empty,
+            screen);
     }
 }
