@@ -125,8 +125,6 @@ public class GameManager : MonoBehaviour {
     /// Update is called once per frame.
     /// </summary>
     void Update() {
-        // TODO: Remove
-        Physics.gravity = Vector3.down * GRAVITY;
         switch (state) {
             case GameState.GameStarting :
                 break;

@@ -97,8 +97,8 @@ public class CameraTracking : MonoBehaviour {
         side = (side == Side.Norm) ? Side.Flip : Side.Norm;
         flipping = false;
 
-        // TODO: Send a signal to the player that we're done, so the ghost can
-        // change.
+        // Tell the ghost to change, since we stopped flipping.
+        GameObject.Find("Ghost").SendMessage("Switch");
         
         // Reverse the gravity.
         Physics.gravity = Physics.gravity * -1f;
