@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
     public const string GAMETITLE = "Purgatory";
     public const string GAMESUBTITLE = "The fight for equilibrium";
     public const string STARTSCREEN = "title";
+    public float GRAVITY = 15f;
 
     // Default values for the global variables.
     private const string D_LEVEL  = "New level";
@@ -117,12 +118,15 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     void Start() {
         startTime = Time.realtimeSinceStartup;
+        Physics.gravity = Vector3.down * GRAVITY;
     }
 
     /// <summary>
     /// Update is called once per frame.
     /// </summary>
     void Update() {
+        // TODO: Remove
+        Physics.gravity = Vector3.down * GRAVITY;
         switch (state) {
             case GameState.GameStarting :
                 break;

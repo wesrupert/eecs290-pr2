@@ -4,10 +4,11 @@ using System.Collections;
 
 public class Ghost : MonoBehaviour {
 	public bool canFlip = true;	
-	GameObject player = GameObject.Find("Player");
+	GameObject player;
+    
 	// Use this for initialization
 	void Start () {
-		
+		 player = GameObject.Find("Player");
 	}
 	
 	// Update is called once per frame
