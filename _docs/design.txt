@@ -52,3 +52,18 @@ Actions player takes?
 
 Ideal level length?
 Pacing of puzzles?
+
+What is the game about?
+Purgatory is about a man who has survived a spiritual split in the world. The world has been split into the dark, dismal Underworld and the cheerful, bright Overworld. It is up to our lone survivor to reunite these opposing forces and bring balance and continuity back to the planet.
+
+What does the player actually do most of the time?
+The player utilizes movement, jumps and a flip mechanic to reach the rift between the Overworld and the Underworld. The flip mechanic is used to flip between the Overworld and the Underworld to move through obstacles or position the player in an advantageous location unreachable from the previous position.
+
+Why is the player doing these things?
+In order to reach the rift the worlds, the player must maneuver through obstacles. Sometimes, the only way to pass an obstacle is to flip to the other world.
+
+What is the surrounding game universe?
+The game takes place in a fictional realm. Outside of the Underworld or Overworld is deep space, where the player cannot survive.
+
+What feelings should the game convey to the player?
+The feeling of unbalance and the need to fix a broken world should always be present. Players should strive to help our lone survivor restore his world to its natural state of balance and serenity.  
