@@ -1,14 +1,13 @@
 using UnityEngine;
 using System.Collections;
 //Andrew Heckman
-//TODO: implement ghost
+
 public class Player : MonoBehaviour {
     public string playerName = "Player 1";
 	
 	public float speed = 5f;
-	public int jumpheight = 8;
-	public int jumptime = 0;
-	public bool isGrounded = true;
+	public int jumpForce = 300;
+	public bool canFlip = true;
 	// Use this for initialization
 	void Start () {
 		//nothing yet
@@ -24,45 +23,25 @@ public class Player : MonoBehaviour {
 			//same physics
 			transform.Translate(Vector3.left*Time.deltaTime*-speed);
 		}
-		//jumping physics
-		if(Input.GetKey (KeyCode.UpArrow) & isGrounded == true){
-			rigidbody.velocity = new Vector3(0,15,0);
-		}
-		if(isGrounded == false){
-				jumptime++;	
-		}
-		//how high the player can jump
-		if(jumptime>jumpheight){
-			rigidbody.velocity = new Vector3(0,-15,0);
+		//jump physics
+		if(Input.GetKeyDown(KeyCode.UpArrow)){
+			rigidbody.AddForce(0,jumpForce,0);
 		}
 		//flipping mechanic
-		if(Input.GetKeyDown(KeyCode.Space)){
+		if(Input.GetKeyDown(KeyCode.Space) & canFlip){
 			flip();
 		}
 	}
 	
-	//checks to see if collided with ground 
-	//NOTE: we will need to set up the collider on the player's feet for this to work I think
-	void OnCollisionEnter(Collision collision){
-		if(collision.gameObject.tag == "Platform") {
-			isGrounded = true;
-			this.rigidbody.velocity = new Vector3(0,0,0);
-			jumptime = 0;
-		}
-	}
-	
-	//checks to see if jumping
-	void OnCollisionExit(Collision collision){
-		if(collision.gameObject.tag == "Platform") {
-			isGrounded = false;
-		}
+	void flippableInvert(bool status){
+		canFlip = status;
 	}
 	//flip mechanic that flips the camera
+	//makes sure player can jump in the correct axis
 	void flip(){
 		GameObject camera = GameObject.Find("Camera");
 		camera.SendMessage("startFlipping");
-		//gameObject.AddComponent("Ghost");
-		//rigidbody.useGravity(false);
+		jumpForce = -jumpForce;
 	}
 	
 	//resets the character after death
