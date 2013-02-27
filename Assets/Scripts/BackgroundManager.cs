@@ -3,9 +3,6 @@
 /// Purgatory  - BackgroundManager.cs
 /// Script to control the tiling of the background.
 
-// Credit for design goes to:
-// http://catlikecoding.com/unity/tutorials/runner/
-
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -112,7 +109,8 @@ public class BackgroundManager : MonoBehaviour {
         // Calculate the object count.
         int objectCount = 3 + (int)Mathf.Ceil((2f * recycleOffset) / size);
 
-        // Generate the tiles.
+        // Generate the tiles. Credit for design goes to:
+        // http://catlikecoding.com/unity/tutorials/runner/
         objectQueue = new TwoWayQueue<Transform>();
         nextPosition = transform.position.x - (recycleOffset + size);
         lastPosition = nextPosition - size;
@@ -130,7 +128,8 @@ public class BackgroundManager : MonoBehaviour {
     /// Update is called once per frame
     /// </summary>
     void Update () {
-        // Recycle the out of frame tile.
+        // Recycle the out of frame tile. Credit for design goes to:
+        // http://catlikecoding.com/unity/tutorials/runner/
         if (objectQueue.PeekFront().position.x - recycleOffset < trackedObject.transform.position.x) {
             Transform last = objectQueue.PopBack();
             last.position = new Vector3(nextPosition, 0f, transform.position.z);

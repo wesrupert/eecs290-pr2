@@ -147,6 +147,9 @@ public class GameManager : MonoBehaviour {
                 }
                 break;
             case GameState.LevelCompleted :
+                if (startTime + N_COUNTDOWN - Time.realtimeSinceStartup < 0) {
+                    Application.LoadLevel(nextLevel);
+                }
                 break;
             default :
                 break;
