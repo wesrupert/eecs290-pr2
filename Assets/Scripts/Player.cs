@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		transform.position = manager.playerSpawn;
+		this.transform.position = manager.playerSpawn;
 	}
 	
 	// Update is called once per frame
