@@ -314,7 +314,7 @@ public class GameManager : MonoBehaviour {
                 }
                 break;
             case GameState.LevelPlaying :
-                GUI.Box(G_TOP_SMALL_LEFT, string.Format(S_LEVEL, player.playerName, level), levelStyle);
+                GUI.Box(G_TOP_SMALL_LEFT, string.Format(S_LEVEL, Player.playerName, level), levelStyle);
                 GUI.Box(G_TOP_SMALL_RIGHT, string.Format(S_SCORE, lives, score), scoreStyle);
                 break;
             case GameState.LevelPaused :
