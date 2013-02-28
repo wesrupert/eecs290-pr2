@@ -50,10 +50,6 @@ public class Player : MonoBehaviour {
 			isGrounded = false;
 		//}
 	}
-	//stop the player from flipping if flip would kill player
-	void flippableInvert(bool status){
-		canFlip = status;
-	}
 	//flip mechanic that flips the camera
 	//makes sure player can jump in the correct axis
 	void flip(){

@@ -3,12 +3,12 @@ using System.Collections;
 //Andrew Heckman
 
 public class Ghost : MonoBehaviour {
-	public bool canFlip = true;	
-	GameObject player;
+	public Player player;
+
+    public bool canFlip = true;
     
 	// Use this for initialization
 	void Start () {
-		 player = GameObject.Find("Player");
 	}
 	
 	// Update is called once per frame
@@ -22,32 +22,26 @@ public class Ghost : MonoBehaviour {
 
 	//removes player flip rights if inside object
 	//don't want player to kill themselves on flip
-	void OnCollisionEnter(Collision collision){
-		if(collision.gameObject.tag != "Platform") {
-			canFlip = false;
-			player.SendMessage("flippableInvert", canFlip);
-		}
+    void OnCollisionEnter() {
+        player.canFlip = false;
+        canFlip = false;
 	}
 	
 	//resumes flippableness after leaving object
-	void OnCollisionExit(Collision collision){
-		if(collision.gameObject.tag != "Platform") {
-			canFlip = true;
-			player.SendMessage("flippableInvert", canFlip);
-		}
+    void OnCollisionExit() {
+        player.canFlip = true;
+        canFlip = true;
 	}
 	
 	
 	//switches ghost with player
 	void Switch(){
-		var position = transform.position;
-		GameObject player = GameObject.Find("Player");
-		position = player.transform.position;
+		Vector3 position = player.transform.position;
 		player.transform.position = this.transform.position;
-		transform.position = position;
+		this.transform.position = position;
         player.rigidbody.velocity = new Vector3(
                 player.rigidbody.velocity.x,
-                player.rigidbody.velocity.y,
+                -player.rigidbody.velocity.y,
                 player.rigidbody.velocity.z);
 	}
 }

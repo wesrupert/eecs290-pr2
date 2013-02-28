@@ -18,12 +18,6 @@ public class GoalZone : MonoBehaviour {
 	
 	}
 
-    void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "Player") {
-            GameObject.Find("_Game Manager").SendMessage("Goal");
-        }
-    }
-
     void OnTriggerEnter(Collider collider) {
         if (collider.tag == "Player") {
             GameObject.Find("_Game Manager").SendMessage("Goal");

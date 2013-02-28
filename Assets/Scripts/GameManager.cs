@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour {
 
     public bool isFlipped {
         get {
-            return Physics.gravity.y < 0;
+            return Physics.gravity.y > 0;
         }
     }
 
@@ -188,12 +188,12 @@ public class GameManager : MonoBehaviour {
                 break;
             case GameState.LevelPlaying :
                 score += Time.deltaTime;
-                if (Input.GetKey(KeyCode.P)) {
+                if (Input.GetKeyDown(KeyCode.P)) {
                     pause();
                 }
                 break;
             case GameState.LevelPaused :
-                if (Input.GetKey(KeyCode.P)) {
+                if (Input.GetKeyDown(KeyCode.P)) {
                     unpause();
                 }
                 break;
