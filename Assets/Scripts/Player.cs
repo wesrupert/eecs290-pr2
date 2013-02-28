@@ -34,6 +34,7 @@ public class Player : MonoBehaviour {
 			}
 			//flipping mechanic
 			if(Input.GetKeyDown(KeyCode.DownArrow) & canFlip){
+                canFlip = false;
 				flip();
 			}
 		}

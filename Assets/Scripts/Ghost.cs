@@ -24,18 +24,21 @@ public class Ghost : MonoBehaviour {
 	//don't want player to kill themselves on flip
     void OnCollisionEnter() {
         player.canFlip = false;
-        canFlip = false;
 	}
+
+    void OnCollisionStay() {
+        player.canFlip = false;
+    }
 	
 	//resumes flippableness after leaving object
     void OnCollisionExit() {
         player.canFlip = true;
-        canFlip = true;
 	}
 	
 	
 	//switches ghost with player
 	void Switch(){
+        player.canFlip = true;
 		Vector3 position = player.transform.position;
 		player.transform.position = this.transform.position;
 		this.transform.position = position;
