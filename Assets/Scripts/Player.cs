@@ -3,7 +3,7 @@ using System.Collections;
 //Andrew Heckman
 
 public class Player : MonoBehaviour {
-    public string playerName = "Player 1";
+    public static string playerName = "Player 1";
     public GameManager manager;
 	
 	public float speed = 5f;

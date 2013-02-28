@@ -8,26 +8,25 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
     // Game-wide properties.
-    public const string GAMETITLE = "Purgatory";
+    public const string GAMETITLE    = "Purgatory";
     public const string GAMESUBTITLE = "The fight for equilibrium";
-    public const string STARTSCREEN = "title";
+    public const string STARTSCREEN  = "title";
     public const string INSTRUCTIONS = "instructions";
-    public float GRAVITY = 15f;
 
     // Default values for the global variables.
-    private const string D_LEVEL  = "New level";
-    private const float  D_SCORE  = 0f;
-    private const int    D_LIVES  = 3;
-    private const int    D_SWIDTH = 200;
+    private const string D_LEVEL     = "New level";
+    private const float  D_SCORE     = 0f;
+    private const int    D_LIVES     = 3;
+    private const int    D_SWIDTH    = 200;
     private const float  D_TIMESPEED = 2f;
 
     // Constant strings for the gui.
     private const string S_COUNTDOWN = "Start in {0}";
-    private const string S_LEVEL = "{0} - {1}";
-    private const string S_LIVES = "{0} lives left";
-    private const string S_ONELIFE = "1 life left";
-    private const string S_PAUSED = "Paused.";
-    private const string S_SCORE = "{0} lives - score: {1:N2}";
+    private const string S_LEVEL     = "{0} - {1}";
+    private const string S_LIVES     = "{0} lives left";
+    private const string S_ONELIFE   = "1 life left";
+    private const string S_PAUSED    = "Paused.";
+    private const string S_SCORE     = "{0} lives - score: {1:N2}";
 
     // Constant values for splash screens.
     private const float N_SPLASH_W      = 1280, N_SPLASH_H      = 960;
@@ -42,8 +41,10 @@ public class GameManager : MonoBehaviour {
     private const float N_DIED_QUIT_X   = 702,  N_DIED_QUIT_Y   = 524;
     private const float N_DIED_QUIT_W   = 357,  N_DIED_QUIT_H   = 110;
 
-    // Length of a countdown.
-    private const float N_COUNTDOWN = 3f;
+    // Numeric constants for the game.
+    private const float N_COUNTDOWN    = 3f;
+    private const int   N_LIVESSTARTED = 1;
+    private const int   N_LIVESADDED   = 3;
 
     // GUI boxes for displaying text at various points in the game.
     // Implemented as properties since they update in real time but are used as constants.
@@ -144,6 +145,9 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Private variables for managing timings;
+    private float startTime, timeScale;
+
     /// <summary>
     /// Enumeration of possible states for the game.
     /// </summary>
@@ -163,24 +167,29 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public GameState state = GameState.GameStarting;
 
-    // Global variables for the game.
+    // Scene-based variables for the game.
+    public float GRAVITY = 9.8f;
     public Player player;
     public string nextLevel;
     public string level  = D_LEVEL;
-    public float  score  = D_SCORE;
     public float  timespeed = D_TIMESPEED;
-    public int    lives  = D_LIVES;
     public int    swidth = D_SWIDTH;
     public Vector3 playerSpawn = Vector3.zero;
+
+    // Static (scene-independent) variables.
+    public static float  score;
+    public static int    lives;
 
     // Styles for various GUIs
     public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle, buttonStyle;
     public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry, levelSplash, instructionsSplash;
 
-    private float startTime, timeScale;
-
+    /// <summary>
+    /// Returns whether the world is flipped or not.
+    /// </summary>
     public bool isFlipped {
         get {
+            // Aaaand this is why I'm abstracting it.
             return Physics.gravity.y > 0;
         }
     }
@@ -192,6 +201,16 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = timespeed;
         startTime = Time.realtimeSinceStartup;
         Physics.gravity = Vector3.down * GRAVITY;
+
+        switch (state) {
+            case GameState.GameStarting :
+                score = 0f;
+                lives = N_LIVESSTARTED;
+                break;
+            case GameState.LevelStarting :
+                lives += N_LIVESADDED;
+                break;
+        }
     }
 
     /// <summary>
