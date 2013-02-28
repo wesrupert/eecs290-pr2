@@ -56,7 +56,10 @@ public class Player : MonoBehaviour {
 	void flip(){
 		GameObject camera = GameObject.Find("Camera");
 		camera.SendMessage("startFlipping");
-		jumpForce = -jumpForce;
+        if (jumpForce > 0 && Physics.gravity.y < 0 ||
+            jumpForce < 0 && Physics.gravity.y > 0) {
+            jumpForce = -jumpForce;
+        }
 	}
 	
 	//Hey Wes, I noticed you still call Die(), so I kept this here. Totally useless code.
