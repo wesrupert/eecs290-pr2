@@ -4,20 +4,16 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
     public string playerName = "Player 1";
+    public GameManager manager;
 	
 	public float speed = 5f;
 	public int jumpForce = 300;
 	public bool canFlip = true;
 	public bool isGrounded = true;
-	public float STARTING_X = 0;
-	public float STARTING_Y = 0;
 	
 	// Use this for initialization
 	void Start () {
-		var position = transform.position;
-		position.x = STARTING_X;
-		position.y = STARTING_Y;
-		transform.position = position;
+		transform.position = manager.playerSpawn;
 	}
 	
 	// Update is called once per frame
@@ -69,14 +65,12 @@ public class Player : MonoBehaviour {
 	//Hey Wes, I noticed you still call Die(), so I kept this here. Totally useless code.
 	//Let me know if you don't need it anymore
 	void Die(){
+        GameObject.Find("_Game Manager").SendMessage("Died");
 	}
 	
 	//resets the character after death
-	void Respawn(float[] pos){
-		var position = transform.position;
-		position.x = pos[0];
-		position.y = pos[1];
-		transform.position = position;
+	void Respawn(Vector3 pos){
+		transform.position = pos;
 	}
 }
 

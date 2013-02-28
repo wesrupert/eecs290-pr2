@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour {
     public Vector3 playerSpawn = Vector3.zero;
 
     // Styles for various GUIs
-    public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle;
+    public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle, buttonStyle;
     public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry, levelSplash;
 
     private float startTime, timeScale;
@@ -208,13 +208,13 @@ public class GameManager : MonoBehaviour {
         switch (state) {
             case GameState.GameStarting :
                 GUISplashScreen(titleSplash);
-                if (GUI.Button(B_TITLE_START, string.Empty)) {
+                if (GUI.Button(B_TITLE_START, string.Empty, buttonStyle)) {
                     Application.LoadLevel(nextLevel);
                 }
                 break;
             case GameState.GameWon :
                 GUISplashScreen(winSplash);
-                if (GUI.Button(B_NEWGAME, string.Empty)) {
+                if (GUI.Button(B_NEWGAME, string.Empty, buttonStyle)) {
                     Application.LoadLevel(STARTSCREEN);
                 }
                 break;
@@ -228,18 +228,18 @@ public class GameManager : MonoBehaviour {
                         GUI.Box(G_LIVESLEFT, string.Format(S_LIVES, lives), livesLeftStyle);
                     }
 
-                    if (GUI.Button(B_DIED_GO, string.Empty)) {
+                    if (GUI.Button(B_DIED_GO, string.Empty, buttonStyle)) {
                         lives--;
-                        player.SendMessage("Respawn");
+                        player.SendMessage("Respawn", playerSpawn);
                         state = GameState.LevelStarting;
                     }
-                    if (GUI.Button(B_DIED_QUIT, string.Empty)) {
+                    if (GUI.Button(B_DIED_QUIT, string.Empty, buttonStyle)) {
                         Application.LoadLevel(STARTSCREEN);
                     }
                 }
                 else {
                     GUISplashScreen(dieSplashNoRetry);
-                    if (GUI.Button(B_NEWGAME, string.Empty)) {
+                    if (GUI.Button(B_NEWGAME, string.Empty, buttonStyle)) {
                         Application.LoadLevel(STARTSCREEN);
                     }
                 }
@@ -272,6 +272,13 @@ public class GameManager : MonoBehaviour {
     public void Goal() {
         startTime = Time.realtimeSinceStartup;
         state = GameState.LevelCompleted;
+    }
+
+    /// <summary>
+    /// Sets up the game over screen.
+    /// </summary>
+    public void Died() {
+        state = GameState.GameLost;
     }
 
     /// <summary>
