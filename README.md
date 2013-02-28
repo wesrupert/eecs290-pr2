@@ -7,12 +7,4 @@ The game has mostly basic platformer mechanics. The player jumps from platform t
 
 The mechanic that makes this game unique is the ability for the player to _flip_ the world, making the ceiling of the world become the floor and vice versa. This allows for the player to pass otherwise insurmountable obstacles, though it introduces challenges of its own. The game player is forced to think more abstractly about the surface they are running on, and determine how to pass challenges using both the top and the bottom of the world to move ahead.
 
-Presently, the game has these features:
-- Single player
-- Side scrolling
-- Static platforms
-- World flip
-
-We hope to add:
-- Time limit / scoring
-- Dynamic platforms
+The game aims to be a puzzle platformer, using the spatial fuzziness of objects only existing maybe on one side of the map. The game is single player, since there is no good way to share the world-flipping mechanic. There are no enemies in the world, but there are bottomless pits that the player can fall in, forcing the player to start the level (or possibly the game) over. Some of the platforms are moving, and some of them aren't affected by the world flipping as well, adding to the types of puzzles alloted.
