@@ -155,6 +155,12 @@ public class GameManager : MonoBehaviour {
 
     private float startTime, timeScale;
 
+    public bool isFlipped {
+        get {
+            return Physics.gravity.y < 0;
+        }
+    }
+
     /// <summary>
     /// Use this for initialization.
     /// </summary>
@@ -229,6 +235,9 @@ public class GameManager : MonoBehaviour {
                     }
 
                     if (GUI.Button(B_DIED_GO, string.Empty, buttonStyle)) {
+                        if (isFlipped) {
+                            GameObject.Find("Camera").SendMessage("startFlipping");
+                        }
                         lives--;
                         player.SendMessage("Respawn", playerSpawn);
                         state = GameState.LevelStarting;
