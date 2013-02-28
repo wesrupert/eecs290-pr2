@@ -71,6 +71,10 @@ public class Player : MonoBehaviour {
 	//resets the character after death
 	void Respawn(Vector3 pos){
 		transform.position = pos;
+        canFlip = true;
+        if (jumpForce < 0) {
+            jumpForce = -jumpForce;
+        }
 	}
 }
 

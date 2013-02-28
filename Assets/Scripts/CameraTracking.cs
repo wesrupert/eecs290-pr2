@@ -53,11 +53,12 @@ public class CameraTracking : MonoBehaviour {
     /// <summary>
     /// Use this for initialization.
     /// </summary>
-    void Start () {
+    void Start() {
         // Set up the camera in its initial position.
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         transform.position = new Vector3(0f, 0f, -distance);
         side = Side.Norm;
+        flipping = false;
 
         // If we don't have a tracked object, find the player.
         if (trackedObject == null) {

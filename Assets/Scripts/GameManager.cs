@@ -146,7 +146,8 @@ public class GameManager : MonoBehaviour {
     }
 
     // Private variables for managing timings;
-    private float startTime, timeScale;
+    private float startTime;
+    public float timeScale;
 
     /// <summary>
     /// Enumeration of possible states for the game.
@@ -168,7 +169,7 @@ public class GameManager : MonoBehaviour {
     public GameState state = GameState.GameStarting;
 
     // Scene-based variables for the game.
-    public float GRAVITY = 9.8f;
+    public float gravity = 9.8f;
     public Player player;
     public string nextLevel;
     public string level  = D_LEVEL;
@@ -200,7 +201,7 @@ public class GameManager : MonoBehaviour {
     void Start() {
         Time.timeScale = timespeed;
         startTime = Time.realtimeSinceStartup;
-        Physics.gravity = Vector3.down * GRAVITY;
+        Physics.gravity = Vector3.down * gravity;
 
         switch (state) {
             case GameState.GameStarting :
@@ -219,30 +220,40 @@ public class GameManager : MonoBehaviour {
     void Update() {
         switch (state) {
             case GameState.GameStarting :
+                pause();
                 break;
             case GameState.Instructions :
+                pause();
                 break;
             case GameState.GameWon :
+                pause();
                 break;
             case GameState.GameLost :
+                pause();
                 break;
             case GameState.LevelStarting :
+                pause();
                 if (startTime + N_COUNTDOWN - Time.realtimeSinceStartup < 0) {
                     state = GameState.LevelPlaying;
                 }
                 break;
             case GameState.LevelPlaying :
+                unpause();
                 score += Time.deltaTime;
                 if (Input.GetKeyDown(KeyCode.P)) {
                     pause();
+                    state = GameState.LevelPaused;
                 }
                 break;
             case GameState.LevelPaused :
+                pause();
                 if (Input.GetKeyDown(KeyCode.P)) {
                     unpause();
+                    state = GameState.LevelPlaying;
                 }
                 break;
             case GameState.LevelCompleted :
+                pause();
                 if (startTime + N_COUNTDOWN - Time.realtimeSinceStartup < 0) {
                     Application.LoadLevel(nextLevel);
                 }
@@ -341,6 +352,8 @@ public class GameManager : MonoBehaviour {
     /// Sets up the game over screen.
     /// </summary>
     public void Died() {
+        GameObject.Find("Camera").SendMessage("Start");
+        Physics.gravity = Vector3.down * gravity;
         state = GameState.GameLost;
     }
 
@@ -348,9 +361,10 @@ public class GameManager : MonoBehaviour {
     /// Pauses the game.
     /// </summary>
     private void pause() {
-        timeScale = Time.timeScale;
+        if (Time.timeScale > 0f) {
+            timeScale = Time.timeScale;
+        }
         Time.timeScale = 0f;
-        state = GameState.LevelPaused;
     }
 
     /// <summary>
@@ -358,7 +372,6 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private void unpause() {
         Time.timeScale = timeScale;
-        state = GameState.LevelPlaying;
     }
 
     /// <summary>
