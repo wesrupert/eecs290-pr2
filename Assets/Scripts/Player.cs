@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		//if(GameManager.GameState == "LevelPlaying"){
+		if(manager.state == GameManager.GameState.LevelPlaying){
 			if(Input.GetKey(KeyCode.LeftArrow)){
 				//physics to move
 				transform.Translate(Vector3.left*Time.deltaTime*speed);
@@ -33,10 +33,10 @@ public class Player : MonoBehaviour {
 				isGrounded = false;
 			}
 			//flipping mechanic
-			if(Input.GetKeyDown(KeyCode.Space) & canFlip){
+			if(Input.GetKeyDown(KeyCode.DownArrow) & canFlip){
 				flip();
 			}
-		//}
+		}
 	}
 	
 	void OnCollisionEnter(){

@@ -12,14 +12,12 @@ public class Ghost : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	//TODO:checks position of player and mimics it invertedly (not a word)
 	void Update () {
 		var playerPos = player.transform.position;
 		var myPos = this.transform.position;
 		myPos.x = playerPos.x;
 		myPos.y = -playerPos.y;
 		this.transform.position = myPos;
-		
 	}
 
 	//removes player flip rights if inside object
@@ -47,5 +45,9 @@ public class Ghost : MonoBehaviour {
 		position = player.transform.position;
 		player.transform.position = this.transform.position;
 		transform.position = position;
+        player.rigidbody.velocity = new Vector3(
+                player.rigidbody.velocity.x,
+                player.rigidbody.velocity.y,
+                player.rigidbody.velocity.z);
 	}
 }
