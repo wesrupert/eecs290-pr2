@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
     public const string GAMETITLE = "Purgatory";
     public const string GAMESUBTITLE = "The fight for equilibrium";
     public const string STARTSCREEN = "title";
+    public const string INSTRUCTIONS = "instructions";
     public float GRAVITY = 15f;
 
     // Default values for the global variables.
@@ -30,8 +31,10 @@ public class GameManager : MonoBehaviour {
 
     // Constant values for splash screens.
     private const float N_SPLASH_W      = 1280, N_SPLASH_H      = 960;
-    private const float N_TITLE_START_X = 333,  N_TITLE_START_Y = 453;
+    private const float N_TITLE_START_X = 333,  N_TITLE_START_Y = 453, N_TITLE_OPTIONS_Y = 626;
     private const float N_TITLE_START_W = 595,  N_TITLE_START_H = 132;
+    private const float N_INSTRUCTION_X = 347,  N_INSTRUCTION_Y = 684;
+    private const float N_INSTRUCTION_W = 570,  N_INSTRUCTION_H = 135;
     private const float N_NEWGAME_X     = 419,  N_NEWGAME_Y     = 451;
     private const float N_NEWGAME_W     = 479,  N_NEWGAME_H     = 130;
     private const float N_DIED_GO_X     = 134,  N_DIED_GO_Y     = 521;
@@ -90,6 +93,26 @@ public class GameManager : MonoBehaviour {
             return new Rect(screenX, screenY, screenW, screenH);
         }
     }
+    private Rect B_TITLE_OPTIONS {
+        get {
+            float screenX = Screen.width * N_TITLE_START_X / N_SPLASH_W;
+            float screenY = Screen.height * N_TITLE_OPTIONS_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_TITLE_START_X + N_TITLE_START_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_TITLE_OPTIONS_Y + N_TITLE_START_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
+        }
+    }
+    private Rect B_INSTRUCTION {
+        get {
+            float screenX = Screen.width * N_INSTRUCTION_X / N_SPLASH_W;
+            float screenY = Screen.height * N_INSTRUCTION_Y / N_SPLASH_H;
+            float screenW = (Screen.width * (N_INSTRUCTION_X + N_INSTRUCTION_W) / N_SPLASH_W) - screenX;
+            float screenH = (Screen.height * (N_INSTRUCTION_Y + N_INSTRUCTION_H) / N_SPLASH_H) - screenY;
+
+            return new Rect(screenX, screenY, screenW, screenH);
+        }
+    }
     private Rect B_NEWGAME {
         get {
             float screenX = Screen.width * N_NEWGAME_X / N_SPLASH_W;
@@ -126,6 +149,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public enum GameState {
         GameStarting,
+        Instructions,
         GameWon,
         GameLost,
         LevelStarting,
@@ -151,7 +175,7 @@ public class GameManager : MonoBehaviour {
 
     // Styles for various GUIs
     public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle, buttonStyle;
-    public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry, levelSplash;
+    public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry, levelSplash, instructionsSplash;
 
     private float startTime, timeScale;
 
@@ -176,6 +200,8 @@ public class GameManager : MonoBehaviour {
     void Update() {
         switch (state) {
             case GameState.GameStarting :
+                break;
+            case GameState.Instructions :
                 break;
             case GameState.GameWon :
                 break;
@@ -216,6 +242,15 @@ public class GameManager : MonoBehaviour {
                 GUISplashScreen(titleSplash);
                 if (GUI.Button(B_TITLE_START, string.Empty, buttonStyle)) {
                     Application.LoadLevel(nextLevel);
+                }
+                if (GUI.Button(B_TITLE_OPTIONS, string.Empty, buttonStyle)) {
+                    Application.LoadLevel(INSTRUCTIONS);
+                }
+                break;
+            case GameState.Instructions :
+                GUISplashScreen(instructionsSplash);
+                if (GUI.Button(B_INSTRUCTION, string.Empty, buttonStyle)) {
+                    Application.LoadLevel(STARTSCREEN);
                 }
                 break;
             case GameState.GameWon :
