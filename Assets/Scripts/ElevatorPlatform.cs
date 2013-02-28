@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+//Author: Blake Needleman
 public class ElevatorPlatform : MonoBehaviour {
 
 	public Vector3 upperBound;
