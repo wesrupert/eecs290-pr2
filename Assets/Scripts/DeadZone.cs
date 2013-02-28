@@ -20,7 +20,6 @@ public class DeadZone : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.name == "Player") {
-            // TODO: tell the player what the cause of death was.
             collision.gameObject.SendMessage("Die");
         }
     }

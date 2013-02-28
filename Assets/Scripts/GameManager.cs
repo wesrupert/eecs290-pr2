@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour {
 
     // Styles for various GUIs
     public GUIStyle levelStyle, scoreStyle, livesLeftStyle, countdownStyle;
-    public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry;
+    public GUIStyle titleSplash, winSplash, dieSplash, dieSplashNoRetry, levelSplash;
 
     private float startTime, timeScale;
 
@@ -258,7 +258,7 @@ public class GameManager : MonoBehaviour {
                 GUI.Box(G_CENTER_BIG, S_PAUSED, countdownStyle);
                 break;
             case GameState.LevelCompleted :
-                GUISplashScreen(titleSplash); // TODO: Change to levelcomplete splash.
+                GUISplashScreen(levelSplash);
                 break;
             default :
                 // Nothing is drawn when we don't know what's going on.
@@ -266,17 +266,34 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sets up level complete screen.
+    /// </summary>
+    public void Goal() {
+        startTime = Time.realtimeSinceStartup;
+        state = GameState.LevelCompleted;
+    }
+
+    /// <summary>
+    /// Pauses the game.
+    /// </summary>
     private void pause() {
         timeScale = Time.timeScale;
         Time.timeScale = 0f;
         state = GameState.LevelPaused;
     }
 
+    /// <summary>
+    /// Unpauses the game.
+    /// </summary>
     private void unpause() {
         Time.timeScale = timeScale;
         state = GameState.LevelPlaying;
     }
 
+    /// <summary>
+    /// Displays a fullscreen splashscreen using the given style.
+    /// </summary>
     private void GUISplashScreen(GUIStyle screen) {
         GUI.Box(
             new Rect(0, 0, Screen.width, Screen.height),
